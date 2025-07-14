@@ -7,28 +7,17 @@ import 'home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-
   await dotenv.load(fileName: ".env");
-
- 
-  debugPrint(" API_URL_WEB: ${dotenv.env['API_URL_WEB']}");
-  debugPrint(" API_URL_ANDROID: ${dotenv.env['API_URL_ANDROID']}");
-  debugPrint(" API_URL_IOS: ${dotenv.env['API_URL_IOS']}");
-
   
-  assert(dotenv.env['API_URL_WEB'] != null && dotenv.env['API_URL_WEB']!.isNotEmpty,
-      ' API_URL_WEB tanımlı değil veya boş!');
-  assert(dotenv.env['API_URL_ANDROID'] != null && dotenv.env['API_URL_ANDROID']!.isNotEmpty,
-      ' API_URL_ANDROID tanımlı değil veya boş!');
-  assert(dotenv.env['API_URL_IOS'] != null && dotenv.env['API_URL_IOS']!.isNotEmpty,
-      ' API_URL_IOS tanımlı değil veya boş!');
+  final apiUrl = dotenv.env['API_URL'];
+  assert(apiUrl != null && apiUrl.isNotEmpty, 'API_URL tanımlı değil veya boş!');
 
-  runApp(const MyApp());
+  runApp(MyApp(apiUrl: apiUrl!));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String apiUrl;
+  const MyApp({required this.apiUrl, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +39,9 @@ class MyApp extends StatelessWidget {
       ],
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/': (context) => LoginScreen(apiUrl: apiUrl),
+        '/register': (context) => RegisterScreen(apiUrl: apiUrl),
+        '/home': (context) => HomeScreen(apiUrl: apiUrl),
       },
     );
   }
